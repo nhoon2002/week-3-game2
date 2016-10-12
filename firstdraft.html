@@ -1,32 +1,7 @@
-<!-- 
-// start game by running some "start" function
-    // reset guesses
-    // choose new word
-    // update HTML with display of new word blanks
-
-document.onkeyup = function(event) {
-    // get the user input as a lower case letter
-    // check if the letter matches one from word
-        // if letter exists in word string
-            // loop display of blanks to update with the correct letter to show
-        // if letter is not in word
-            // reduce guesses by one
-            // add wrong letter in list of guesses
-
-    // after each letter press is processed
-    // update html with guesses and update blank lines list
-    // if user found all the letters
-        // show "you win" message
-        // restart game by running that same "start" function
-    // if user ran out of guesses
-        // show "You Lost" message
-        // restart game by running that same "start" function
- -->
-
  <!DOCTYPE html>
  <html>
      <head>
-         <title>HANGMAN PLACEHOLDER TITLE</title>
+         <title>HANGMAN | BY NAM H. KIM</title>
          <meta charset="UTF-8">
      </head>
 
@@ -47,7 +22,7 @@ document.onkeyup = function(event) {
      <script type="text/javascript">
        
         //- Pre-set a bank of words the computer will randomly choose from per round.
-        var word_bank = ["hello", "document", "chaehwa", "namhoon"];
+        var word_bank = ["hello", "document", "offend", "product", "share", "contempt", "calendar", "tourist", "multimedia", "jaw", "current", "consensus", "excitement", "clearance"];
         var wins = 0;
         var losses = 0;
         var current_word;
