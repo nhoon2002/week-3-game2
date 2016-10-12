@@ -31,27 +31,45 @@ document.onkeyup = function(event) {
      </head>
 
 
-    <!-- Displays the win or loss statistics -->
-     <div id="winorlose"> </div>
-    <!-- Displays the letters and dashes, to be CSS'd -->
-     <div id="playarea"></div>
+
 
      <body>
+            <div id="main"><h1>HANGMAN</h1></div>
+            <!-- Displays the win or loss statistics -->
+  
+            <!-- Displays the letters and dashes, to be CSS'd -->
+             <div id="guesses"></div>
+             <div id="guesses_rem">PRESS ANY KEY TO GET STARTED!</div>
+             <div id="playarea"></div>
+             <div id="winorlose"></div>
+             <div id="tryagain"></div>
 
      <script type="text/javascript">
        
         //- Pre-set a bank of words the computer will randomly choose from per round.
         var word_bank = ["hello", "document", "chaehwa", "namhoon"];
-        var wins;
-        var losses;
+        var wins = 0;
+        var losses = 0;
         var current_word;
         var current_array;
         var placehold_array;
         var guesses_remain;
         var guesses_array;
-        
 
-    // Defines a function which filles a given array with the character of choice, in our case "-".
+
+
+    // After winning/losing, defaults back to this page on click.
+    function defaultDisplay () {
+            document.querySelector('#playarea').innerHTML = placehold_array.join(' ');
+            document.querySelector('#guesses_rem').innerHTML = 'Guesses Remaning: '+guesses_remain;
+            document.querySelector('#guesses').innerHTML = 'Guesses So Far: ['+guesses_array+' ]';
+            document.querySelector('#winorlose').innerHTML = 'Wins: '+wins+'<br>'+'Losses: '+losses;
+            document.querySelector('#tryagain').innerHTML ='';
+
+            
+    }
+
+    // Defines a function which fills a given array with the character of choice, in our case "-".
     function fillArray(a, b, c) {
        for (var i = 0; i < b; i++) {
             a[i] = c;
@@ -79,13 +97,16 @@ document.onkeyup = function(event) {
         // Runs the fillArray function to fill up the placeholder array with "-" with the length matching current_array.
         fillArray(placehold_array, current_array.length, "-");
         console.log(placehold_array);
-// ///////////////////////////////////////////////////////////////////////////////
+
      
 
         // Resets remaining guesses to 10 each time the game starts        
-        var guesses_remain = 10;
-        var guesses_array = [];
+        guesses_remain = 10;
+        guesses_array = [];
+
+        document.querySelector('#guesses').innerHTML = guesses_array;
     }
+
 
     GameStart();
         
@@ -93,30 +114,25 @@ document.onkeyup = function(event) {
     
         document.onkeyup = function(event) {
 
-
+            // Initialize userGuess.
             var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
                 console.log (userGuess);
-            
-                if (current_array.indexOf(userGuess) < 0 ) {
-                 guesses_remain--;
+
+                //If user's guess is wrong, reduce remaining guesses available by 1, with a safeguard against user entering the same wrong character again.
+                if ((current_array.indexOf(userGuess) < 0 ) && (guesses_array.indexOf(userGuess) < 0)) {
+                    guesses_remain--;
                 }
 
-
-
-            if (guesses_array.indexOf(userGuess) < 0) {
-                guesses_array.push(userGuess);
-            }
-
-            console.log(guesses_array);
-
+                //If user's guess is unique and not a character that has already been entered, include the input in the array of unique guesses.
                 if (guesses_array.indexOf(userGuess) < 0) {
-                    guesses_remain++;
-                    
+                    guesses_array.push(userGuess);
                 }
 
+                console.log(guesses_array);
 
+                
+               
 
-            
 
             for (i = 0; i < current_array.length; i++) {
                 //replaces the dashes with correctly guessed letter
@@ -129,19 +145,14 @@ document.onkeyup = function(event) {
 
             console.log(placehold_array);
             console.log(guesses_remain);
+            document.querySelector('#playarea').innerHTML = placehold_array.join(" ");
+            document.querySelector('#guesses_rem').innerHTML = 'Guesses Remaning: '+guesses_remain;
+            document.querySelector('#guesses').innerHTML = 'Guesses So Far: ['+guesses_array+' ]';
 
 
-            //FOR SOME REASON THIS CODE WON'T RUN BECAUSE THE COMPUTER DOESNT BELIEVE THE TWO ARRAYS ARE IDENTICAL
-            // if (placehold_array == current_array) {
-            //     console.log("SAME");
-            //     console.log("placehold = "+placehold_array);
-            //     console.log("current = "+current_array);
-            // }
 
-           //FOR THAT REASON, THIS WAS THE REPLACEMENT METHOD TO CHECK WHETHER THE USER SUCCEEDED IN GUESSING THE WORD CORRECTLY--THAT IS, THERE ARE NO HYPHENS WITHIN THE placehold_array.
-            
-                var checker;
-            
+
+                //Check whether there are still dashes within placehold_array.
                 if (placehold_array.indexOf('-') < 0 ) {
                   var checker = true;
                 } else {
@@ -150,26 +161,26 @@ document.onkeyup = function(event) {
              
             console.log (checker);
 
-            if (checker == true) {
-                document.querySelector('#winorlose').innerHTML = 'You win!' + '<br>' + 'Tap any key to play again.';
+
+            //winning condition    
+            if (checker == true)  {
+                document.querySelector('#winorlose').innerHTML = 'You win!' + '<br>' + 'Click button to play again.';
                 wins++;
-                var replay = confirm ("Would you like to play again?");
-                    //Probably shouldn't be using this line because it would refresh the win/loss count
-                    if ((replay == true) && (checker==true)) {window.location.reload()}               
-                          
-
-
-
+                    document.querySelector('#tryagain').innerHTML = '<button onclick="GameStart(), defaultDisplay()">Play Again</button>'
             }
 
+            //losing condition  
             if ((guesses_remain == 0) && (checker == false)) {
-                document.querySelector('#winorlose').innerHTML = 'You lost...' + '<br>' + 'Tap any key to play again.';
+                document.querySelector('#winorlose').innerHTML = 'You lost...' + '<br>' + 'Click button to play again.';
                 losses++;
-                var replay = confirm ("Would you like to play again?");
-                    
-                    //Probably shouldn't be using this line because it would refresh the win/loss count
-                    if ((replay == true) && (checker==false)) {window.location.reload()}                   
-
+                    document.querySelector('#tryagain').innerHTML = '<button onclick="GameStart(), defaultDisplay()">Play Again</button>'
+            }                
+             
+            //Safeguard against users continuing to guess without hitting the button.    
+            if (guesses_remain < 0) {
+                guesses_remain = 10;
+                GameStart();
+                defaultDisplay();
                 
 
             }
@@ -207,7 +218,7 @@ document.onkeyup = function(event) {
     }
 
          
-
+                
 
 
 
@@ -217,7 +228,8 @@ document.onkeyup = function(event) {
 
      </script>
 
-    
+
+
    
      
      </body>
