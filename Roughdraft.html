@@ -1,0 +1,193 @@
+<!-- 
+// start game by running some "start" function
+    // reset guesses
+    // choose new word
+    // update HTML with display of new word blanks
+
+document.onkeyup = function(event) {
+    // get the user input as a lower case letter
+    // check if the letter matches one from word
+        // if letter exists in word string
+            // loop display of blanks to update with the correct letter to show
+        // if letter is not in word
+            // reduce guesses by one
+            // add wrong letter in list of guesses
+
+    // after each letter press is processed
+    // update html with guesses and update blank lines list
+    // if user found all the letters
+        // show "you win" message
+        // restart game by running that same "start" function
+    // if user ran out of guesses
+        // show "You Lost" message
+        // restart game by running that same "start" function
+ -->
+
+ <!DOCTYPE html>
+ <html>
+     <head>
+         <title>HANGMAN PLACEHOLDER TITLE</title>
+         <meta charset="UTF-8">
+     </head>
+
+     <div id="winorlose"> </div>
+
+     <body>
+     <script type="text/javascript">
+       
+        //- Pre-set a bank of words the computer will randomly choose from per round.
+        var word_bank = ["hello", "document", "chaehwa", "namhoon"];
+
+
+
+
+        
+        // Sets current_word as a random string chosen from the word_bank.
+        var current_word = word_bank[Math.floor(Math.random()*word_bank.length)];
+        // Check
+        console.log(current_word);
+
+
+        // Splits the current_word into an array of single characters.
+        var current_array = current_word.split('');
+        // Check
+        console.log(current_array);
+
+
+        // Initializes a placeholder empty array, to be filled with "-".
+        var placehold_array = [];
+            // Defines a function which filles a given array with the character of choice, in our chase "-".
+            function fillArray(a, b, c) {
+                for (var i = 0; i < b; i++) {
+                a[i] = c;
+                }
+            }
+        // Runs the fillArray function to fill up the placeholder array with "-" with the length matching current_array.
+        fillArray(placehold_array, current_array.length, "-");
+        console.log(placehold_array);
+// ///////////////////////////////////////////////////////////////////////////////
+     
+
+        // Resets remaining guesses to 10 each time the game starts        
+        var guesses_remain = 10;
+        var guesses_array = [];
+        var wins;
+        var losses;
+        var newgame_bool = true;
+
+    
+        document.onkeyup = function(event) {
+
+
+            var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+            guesses_remain--;
+            guesses_array.push(userGuess);
+            console.log(guesses_array);
+
+
+
+            
+
+            for (i = 0; i < current_array.length; i++) {
+                //replaces the dashes with correctly guessed letter
+                if (userGuess == current_array[i]) {
+                placehold_array[i] = userGuess;                                
+                } 
+                    
+            }
+
+            console.log(placehold_array);
+            console.log(guesses_remain);
+
+
+            //FOR SOME REASON THIS CODE WON'T RUN BECAUSE THE COMPUTER DOESNT BELIEVE THE TWO ARRAYS ARE IDENTICAL
+            if (placehold_array == current_array) {
+                console.log("SAME");
+                console.log("placehold = "+placehold_array);
+                console.log("current = "+current_array);
+            }
+
+           //FOR THAT REASON, THIS WAS THE REPLACEMENT METHOD TO CHECK WHETHER THE USER SUCCEEDED IN GUESSING THE WORD CORRECTLY--THAT IS, THERE ARE NO HYPHENS WITHIN THE placehold_array.
+            for (var j = 0; j < placehold_array.length; j++) {
+                var checker;
+                //The CHECKER system does not work if the final letter of the word is a non-unique letter. Check back later.
+                if (placehold_array[j] === '-') {
+                    var checker = false;
+                } else {
+                  var checker = true;
+                }
+            } 
+            console.log (checker);
+
+            if (checker == true) {
+                document.querySelector('#winorlose').innerHTML = 'You win!' + '<br>' + 'Tap any key to play again.';
+                wins++;
+                var replay = confirm ("Would you like to play again?");
+                    //Probably shouldn't be using this line because it would refresh the win/loss count
+                    if ((replay == true) && (checker==true)) {window.location.reload()}               
+                          
+
+
+
+            }
+
+            if ((guesses_remain == 0) && (checker == false)) {
+                document.querySelector('#winorlose').innerHTML = 'You lost...' + '<br>' + 'Tap any key to play again.';
+                losses++;
+                var replay = confirm ("Would you like to play again?");
+                    
+                    //Probably shouldn't be using this line because it would refresh the win/loss count
+                    if ((replay == true) && (checker==false)) {window.location.reload()}                   
+
+                
+
+            }
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+         
+
+
+
+
+
+
+
+
+     </script>
+
+    
+   
+     
+     </body>
+ </html>
